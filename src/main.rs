@@ -18,6 +18,8 @@ struct Job {
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 struct JobData {
+    address: String,
+    data_prefix: String,
     function_selector: String,
     result: String,
 }
@@ -28,6 +30,14 @@ fn parse_job() -> impl Filter<Extract = (Job,), Error = warp::Rejection> + Clone
 
 async fn process_job(job: Job) -> Result<impl warp::Reply, Infallible> {
     info!(target: "rust-cl-ea", "new job request: {:?}", job);
+
+    // Transaction {
+    //     from: wallet,
+    //     to: job.data.address,
+    //     data: encode(job.data.function_selector, job.data.data_prefix, job.data.result),
+    //     // ...
+    // }
+
     Ok(warp::http::StatusCode::OK)
 }
 

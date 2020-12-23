@@ -24,6 +24,12 @@ struct JobData {
     result: String,
 }
 
+#[derive(Debug, Deserialize, Serialize)]
+struct JobResult {
+    #[serde(rename = "jobRunID")]
+    id: String,
+}
+
 fn parse_job() -> impl Filter<Extract = (Job,), Error = warp::Rejection> + Clone {
     warp::body::content_length_limit(1024 * 16).and(warp::body::json())
 }
@@ -38,7 +44,7 @@ async fn process_job(job: Job) -> Result<impl warp::Reply, Infallible> {
     //     // ...
     // }
 
-    Ok(warp::http::StatusCode::OK)
+    Ok(warp::reply::json(&JobResult { id: job.id }))
 }
 
 #[tokio::main]
